@@ -40,20 +40,18 @@ class Paper extends Component {
                     <Stage width={width} height={height}>
                         <Layer>
                             {/* <Stick 
-                                   millisecond={millisecond}
                                    centerPt={center(0, 0, width, height)}
                                    length={length}
                                    strokeWidth={7}
                                    radius={3.5}
-                                   /> */}
+                                   />
                             <Ring
-                                millisecond={millisecond}
                                 centerPt={center(0, 0, width, height)}
                                 length={length}
                                 radius={3.5}
                                 strokeWidth={7}
-                            />
-                            {/* {nodes} */}
+                            /> */}
+                            {nodes}
                         </Layer>
                     </Stage>
                 </div>
