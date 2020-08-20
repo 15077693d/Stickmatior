@@ -4,4 +4,12 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
+    .paper-frames{
+        border: 2px black solid;
+        border-left: none;;
+        width: 800px;
+        height: 800px;
+        min-width: 800px;
+        min-height: 800px;
+    }
 }

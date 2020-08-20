@@ -1,11 +1,12 @@
 import {useState} from 'react'
 
-const usePoints = (init) => {
+const usePoints = ([init,id]) => {
     const [points, setPoints] = useState(init)
-    const [frames, setFrames] = useState([])
-    const [millisecond, setMillsecond] = useState(500)
+    const baseFrames = []
+    for(let i =0;i<parseInt(sessionStorage.getItem('numberOfFrames'));i++){
+        baseFrames.push(false)
+    }
     const [active,setActive] = useState("")
-   
     return {
         active,
         points,
@@ -17,16 +18,15 @@ const usePoints = (init) => {
             setPoints(newAllPoints)
         },
         addFrames(){
-            let newFrames = JSON.parse(JSON.stringify(frames))
-            setFrames(newFrames.concat([JSON.parse(JSON.stringify(points))]))
-        },
-        playFrames(){
-            for(let i =0;i<frames.length;i++){
-                setTimeout(()=> {setPoints(frames[i])},millisecond*i)
+            let newFrames = JSON.parse(sessionStorage.getItem('frames'))
+            if ( newFrames[id]){
+                newFrames[id] =  newFrames[id].concat([points])
+            }else{
+                newFrames[id] =  baseFrames.concat([points])
             }
+            sessionStorage.setItem('frames', JSON.stringify(newFrames));
         },
         setActive,
-        setMillsecond
     }
 }
 

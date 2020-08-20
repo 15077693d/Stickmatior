@@ -2,12 +2,18 @@ import React, { useEffect } from 'react';
 import { Circle, Group } from 'react-konva';
 import { getPointsAfterMove, getPointAfterRotate } from '../../model'
 import usePoints from '../../hooks/usePoints';
+import useProperties from '../../hooks/useProperties';
 
-const Ring = ({ centerPt, length, radius, strokeWidth }) => {
-    const { active, points, setActive, editPoints, addFrames, playFrames } = usePoints({
-        "center": [centerPt[0], centerPt[1] - length],
-        "point1": centerPt,
-    })
+const Ring = ({ id, removeNode, playPoints }) => {
+    const { properties } = useProperties()
+    const { centerPt, length, strokeWidth, radius } = properties
+    let { active, points, setActive, editPoints, addFrames } = usePoints([{
+        center: [centerPt[0], centerPt[1] - length],
+        point1: centerPt,
+    }, id])
+    if (playPoints) {
+        points = playPoints
+    }
     const { center, point1 } = points
     const stageElement = document.getElementById('stage')
     const init = (e) => {
@@ -16,20 +22,18 @@ const Ring = ({ centerPt, length, radius, strokeWidth }) => {
     }
     useEffect(() => {
         document.getElementById('save').addEventListener('click', addFrames)
-        document.getElementById('play').addEventListener('click', playFrames)
         return () => {
             document.getElementById('save').removeEventListener('click', addFrames)
-            document.getElementById('play').removeEventListener('click', playFrames)
         }
     })
     useEffect(() => {
-        const handleMouseMove = async (e) => {
+        const handleMouseMove = (e) => {
             switch (active) {
                 case "center":
-                    await editPoints(getPointAfterRotate(e, points, 'center', 'point1'))
+                    editPoints(getPointAfterRotate(e, points, 'center', 'point1'))
                     break;
                 case "point1":
-                    await editPoints(getPointsAfterMove(e, points, active))
+                    editPoints(getPointsAfterMove(e, points, active))
                     break;
                 default:
                     break;
@@ -44,10 +48,12 @@ const Ring = ({ centerPt, length, radius, strokeWidth }) => {
             stageElement.addEventListener('mouseup', handleMouseUp)
             stageElement.addEventListener('mousemove', handleMouseMove)
         }
-    }, [active])
-
+    }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (points === false || playPoints === false) {
+        return null
+    }
     return (
-        <Group>
+        <Group onDblClick={() => removeNode(id)}>
             <Circle
                 id="center"
                 radius={length}
@@ -68,6 +74,6 @@ const Ring = ({ centerPt, length, radius, strokeWidth }) => {
             />
         </Group>
     );
-};
+}
 
 export default Ring;

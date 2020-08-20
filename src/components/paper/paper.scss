@@ -1,5 +1,10 @@
 #stage{
-    width: 548px;
-    height: 470px;
-    border: 1px black solid;
+    border: 2px black dashed;
+}
+
+#paper{
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

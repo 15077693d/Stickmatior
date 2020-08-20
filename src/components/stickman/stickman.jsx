@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import { Circle, Group } from 'react-konva';
 import { getPointsAfterMove, getPointAfterRotate, getPointsAfterRotate } from '../../model'
-import Joint from '../joint/joint';
+import Joint from './joint';
 import usePoints from '../../hooks/usePoints';
+import useProperties from '../../hooks/useProperties';
 
-const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
-    const { active, points, editPoints, addFrames, playFrames, setActive } = usePoints(
-        {
+const Stickman = ({ id, removeNode, playPoints }) => {
+    const { properties } = useProperties()
+    const { centerPt, length, strokeWidth, radius, radiusHead } = properties
+    let { active, points, editPoints, addFrames, setActive } = usePoints(
+        [{
             neck: [centerPt[0], centerPt[1] - length],
             center: [centerPt[0], centerPt[1]],
             bottom: [centerPt[0], centerPt[1] + length],
@@ -19,7 +22,10 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
             lToe: [centerPt[0] - 2 * length, centerPt[1] + length],
             rKnee: [centerPt[0] + length, centerPt[1] + length],
             rToe: [centerPt[0] + 2 * length, centerPt[1] + length]
-        })
+        }, id])
+    if (playPoints) {
+        points = playPoints
+    }
     const { neck, center, bottom, head, lHand, lElbow, rHand, rElbow, lKnee, lToe, rKnee, rToe } = points
     const stageElement = document.getElementById('stage')
     const init = (e) => {
@@ -28,14 +34,12 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
     }
     useEffect(() => {
         document.getElementById('save').addEventListener('click', addFrames)
-        document.getElementById('play').addEventListener('click', playFrames)
         return () => {
             document.getElementById('save').removeEventListener('click', addFrames)
-            document.getElementById('play').removeEventListener('click', playFrames)
         }
     })
     useEffect(() => {
-        const handleMouseMove = async (e) => {
+        const handleMouseMove =  (e) => {
             if (["head", "lHand", "rHand", "lToe", "rToe"].includes(active)) {
                 const centerPointPair = {
                     head: "neck",
@@ -44,7 +48,7 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
                     lToe: "lKnee",
                     rToe: "rKnee"
                 }
-                await editPoints(getPointAfterRotate(e, points, active, centerPointPair[active]))
+                editPoints(getPointAfterRotate(e, points, active, centerPointPair[active]))
             } else
                 if (["rElbow", "lElbow", "lKnee", "rKnee"].includes(active)) {
                     const pointPair = {
@@ -72,7 +76,7 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
                         [pointName]: points[pointName],
                         [centerName]: points[centerName]
                     }
-                    await editPoints(getPointsAfterRotate(e, selectedPoints, active, centerName))
+                    editPoints(getPointsAfterRotate(e, selectedPoints, active, centerName))
 
                 } else
                     if (["neck", "center"].includes(active)) {
@@ -94,10 +98,10 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
                         pointPair[active].points.forEach(name => {
                             selectedPoints[name] = points[name]
                         })
-                        await editPoints(getPointsAfterRotate(e, selectedPoints, active, pointPair[active].center))
+                        editPoints(getPointsAfterRotate(e, selectedPoints, active, pointPair[active].center))
                     } else
                         if (["bottom"].includes(active)) {
-                            await editPoints(getPointsAfterMove(e, points, active))
+                            editPoints(getPointsAfterMove(e, points, active))
                         }
         }
         const handleMouseUp = () => {
@@ -109,9 +113,12 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
             stageElement.addEventListener('mouseup', handleMouseUp)
             stageElement.addEventListener('mousemove', handleMouseMove)
         }
-    }, [active])
+    }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (points === false || playPoints === false) {
+        return null
+    }
     return (
-        <Group>
+        <Group onDblClick={() => removeNode(id)}>
             <Circle
                 id="head"
                 radius={radiusHead}
@@ -281,5 +288,5 @@ const Stick = ({ centerPt, length, strokeWidth, radius, radiusHead }) => {
     )
 }
 
-export default Stick;
+export default Stickman;
 
