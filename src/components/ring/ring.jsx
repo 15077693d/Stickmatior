@@ -11,7 +11,9 @@ const Ring = ({ id, removeNode, playPoints }) => {
         center: [centerPt[0], centerPt[1] - length],
         point1: centerPt,
     }, id])
+    let opacity = 1
     if (playPoints) {
+        opacity = 0
         points = playPoints
     }
     const { center, point1 } = points
@@ -70,6 +72,7 @@ const Ring = ({ id, removeNode, playPoints }) => {
                 x={point1[0]}
                 y={point1[1]}
                 fill="blue"
+                opacity={opacity}
                 onMouseDown={init}
             />
         </Group>

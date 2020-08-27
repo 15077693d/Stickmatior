@@ -1,6 +1,6 @@
 import React from 'react';
 import { Circle, Line } from 'react-konva';
-const Joint = ({joint,strokeWidth,radius,init}) =>{
+const Joint = ({joint,strokeWidth,radius,init,opacity}) =>{
      const body = []
      for (let i=0;i<joint.length;i++){
         if(i<2){
@@ -21,6 +21,7 @@ const Joint = ({joint,strokeWidth,radius,init}) =>{
                 x={joint[i]["x"]}
                 y={joint[i]["y"]}
                 onMouseDown={init}
+                opacity={opacity}
             />)
         }
      }

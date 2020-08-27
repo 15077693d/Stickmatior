@@ -23,7 +23,9 @@ const Stickman = ({ id, removeNode, playPoints }) => {
             rKnee: [centerPt[0] + length, centerPt[1] + length],
             rToe: [centerPt[0] + 2 * length, centerPt[1] + length]
         }, id])
+   let opacity = 1
     if (playPoints) {
+        opacity = 0
         points = playPoints
     }
     const { neck, center, bottom, head, lHand, lElbow, rHand, rElbow, lKnee, lToe, rKnee, rToe } = points
@@ -282,6 +284,7 @@ const Stickman = ({ id, removeNode, playPoints }) => {
                     strokeWidth={strokeWidth}
                     radius={radius}
                     init={init}
+                    opacity={opacity}
                 />)
             }
         </Group>

@@ -25,6 +25,7 @@ const getRad = (cartesianPoint) => {
     return rad
 }
 
+
 const getPointByChangeOfRad = (changeOfRad,baseRad,center,length) => {
     const [centerX,centerY] = center
     const newRad = baseRad+changeOfRad
@@ -35,4 +36,33 @@ const getPointByChangeOfRad = (changeOfRad,baseRad,center,length) => {
     return [newX,newY]
 }
 
-export { getDistance, center, getCartesianOriginRelativePoint,getRad,getPointByChangeOfRad }
+const downloadURL = (url, name) => {
+    const link = document.createElement("a");
+    link.download = name;
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+const post = (blob) =>{
+    var http = new XMLHttpRequest();
+    var url = 'http://localhost:4000/'
+    http.open('POST', url, true);
+    http.responseType='blob'
+    const format = 'mp4'
+    let projectName = document.getElementById('filename').value
+    projectName = projectName===""?"animation":projectName
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState === 4 && http.status === 200) {
+            let url = URL.createObjectURL(http.response);
+            downloadURL(url,`${projectName}.${format}`)
+        }
+    }
+    let formData = new FormData()
+    formData.append('format',format)
+    formData.append('blob',blob,projectName+'.webm')
+    http.send(formData);
+}
+
+export { post,downloadURL,getDistance, center, getCartesianOriginRelativePoint,getRad,getPointByChangeOfRad }

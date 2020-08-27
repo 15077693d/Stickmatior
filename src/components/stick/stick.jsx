@@ -13,7 +13,9 @@ const Stick = ({ id, removeNode,playPoints}) => {
             point2: [centerPt[0], centerPt[1]],
             point3: [centerPt[0], centerPt[1] + length]
         }, id])
+    let opacity = 1
     if (playPoints) {
+        opacity = 0
         points = playPoints
     }
     const { point1, point2, point3 } = points
@@ -80,6 +82,7 @@ const Stick = ({ id, removeNode,playPoints}) => {
                 x={point1[0]}
                 y={point1[1]}
                 onMouseDown={init}
+                opacity={opacity}
             />
             <Circle
                 id={`point2`}
@@ -88,6 +91,7 @@ const Stick = ({ id, removeNode,playPoints}) => {
                 x={point2[0]}
                 y={point2[1]}
                 onMouseDown={init}
+                opacity={opacity}
             />
             <Circle
                 id={`point3`}
@@ -96,6 +100,7 @@ const Stick = ({ id, removeNode,playPoints}) => {
                 x={point3[0]}
                 y={point3[1]}
                 onMouseDown={init}
+                opacity={opacity}
             />
         </Group>
     )

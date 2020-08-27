@@ -23,23 +23,24 @@ const useNodes = () => {
         nodes = []
         for (let id in nodesPoints) {
             let playPoints = nodesPoints[id]
-            switch (id.split('_')[0]) {
-                case "stickman":
-                    nodes.push( <Stickman key={id} id={id} playPoints={playPoints} removeNode={removeNode}/>)
-                    break
-                case "stick":
-                    nodes.push( <Stick key={id} id={id} playPoints={playPoints} removeNode={removeNode}/>)
-                    break
-                case "ring":
-                    nodes.push( <Ring key={id} id={id} playPoints={playPoints} removeNode={removeNode}/>)
-                    break
-                case "image":
-                    let [id_, url] = [id.split('&')[0], id.split('&')[1]]
-                    nodes.push( <Img key={id_} id={id_} url={url} />)
-                    break
-                default:
-                    nodes.push( null)
-                    break
+            if (playPoints !== undefined) {
+                switch (id.split('_')[0]) {
+                    case "stickman":
+                        nodes.push(<Stickman key={id} id={id} playPoints={playPoints} removeNode={removeNode} />)
+                        break
+                    case "stick":
+                        nodes.push(<Stick key={id} id={id} playPoints={playPoints} removeNode={removeNode} />)
+                        break
+                    case "ring":
+                        nodes.push(<Ring key={id} id={id} playPoints={playPoints} removeNode={removeNode} />)
+                        break
+                    case "image":
+                        nodes.push(<Img key={id} id={id} playPoints={playPoints} removeNode={removeNode} />)
+                        break
+                    default:
+                        nodes.push(null)
+                        break
+                }
             }
         }
     } else {
@@ -52,8 +53,8 @@ const useNodes = () => {
                 case "ring":
                     return <Ring key={id} id={id} removeNode={removeNode} />
                 case "image":
-                    let [id_, url] = [id.split('&')[0], id.split('&')[1]]
-                    return <Img key={id_} id={id_} url={url} />
+                    let url = id.split('&')[1]
+                    return <Img key={id} id={id} url={url} removeNode={removeNode} />
                 default:
                     return null
             }
